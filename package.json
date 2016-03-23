@@ -1,0 +1,31 @@
+{
+  "name": "reduck",
+  "version": "0.1.0",
+  "description": "",
+  "main": "build/index.js",
+  "jsnext:main": "src/index.js",
+  "scripts": {
+    "test": "make test",
+    "prepublish": "make clean build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/enkidevs/reduck.git"
+  },
+  "homepage": "https://github.com/enkidevs/reduck",
+  "keywords": [],
+  "author": "Mathieu Dutour <mathieu@dutour.me>",
+  "files": [
+    "build/",
+    "src",
+    "!**/__tests__/**"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "@mathieudutour/js-fatigue": "^1.0.4"
+  },
+  "dependencies": {
+    "invariant": "2.2.1",
+    "warning": "2.1.0"
+  }
+}
