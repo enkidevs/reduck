@@ -11,7 +11,7 @@ export const alreadyDefined = {}
 
 function checkActionTypeName (actionType, duckName) {
   invariant(typeof actionType === 'string', 'Action Type: Expected a string. Got %s instead', actionType)
-  warning(actionType.split('.')[0] === duckName || actionType.split('/')[0] === duckName,
+  warning(!duckName || actionType.split('.')[0] === duckName || actionType.split('/')[0] === duckName,
     `Action Type: Expected a string prefixed by '${duckName}'. Got '${actionType}' instead`)
 }
 
