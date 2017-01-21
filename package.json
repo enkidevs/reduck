@@ -22,10 +22,11 @@
   ],
   "license": "MIT",
   "devDependencies": {
-    "@mathieudutour/js-fatigue": "^1.0.4"
+    "@mathieudutour/js-fatigue": "^1.0.4",
+    "babel-eslint": "^7.1.1"
   },
   "dependencies": {
-    "invariant": "2.2.1",
-    "warning": "2.1.0"
+    "invariant": "^2.2.1",
+    "warning": "^2.1.0"
   }
 }
