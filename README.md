@@ -116,7 +116,7 @@ export default combineReducers({
 **Methods**
 
 `defineAction(actionType: String, reducerCases: Object)`
-- `actionType` is the type of the action. Can be whatever you choose as long as it follows the format: `<duck-name>.<some-action-name>`.
+- `actionType` is the type of the action. Can be whatever you choose as long as it follows the format: `<duck-name>/<some-action-name>`.
 This helps with tracking defined actions in each duck.
 
 - `reducerCases` consist of:
