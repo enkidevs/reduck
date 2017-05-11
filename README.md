@@ -208,3 +208,6 @@ Normally, we would want to add a `reject()` function that would roll back the re
 ## License
 
   MIT
+  
+## Appropriate GIF
+![Duck!](https://media2.giphy.com/media/ruhPcuDNmS12M/giphy.gif)
