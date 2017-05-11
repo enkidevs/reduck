@@ -1,7 +1,12 @@
+// @flow
 import warning from 'warning'
 import invariant from 'invariant'
 
-const defaultMapper = {
+type Mapper = {
+  [string]: (actionType: string) => string
+}
+
+const defaultMapper: Mapper = {
   reducer (actionType) { return actionType },
   resolve (actionType) { return actionType + '_RESOLVED' },
   reject (actionType) { return actionType + '_REJECTED' }
@@ -9,30 +14,49 @@ const defaultMapper = {
 
 export const alreadyDefined = {}
 
-function checkActionTypeName (actionType, duckName) {
+function checkActionTypeName (actionType: string, duckName?: string): void {
   invariant(typeof actionType === 'string', 'Action Type: Expected a string. Got %s instead', actionType)
-  warning(!duckName || actionType.split('.')[0] === duckName || actionType.split('/')[0] === duckName,
-    `Action Type: Expected a string prefixed by '${duckName}'. Got '${actionType}' instead`)
+  if (duckName) {
+    warning(
+      actionType.split('.')[0] === duckName || actionType.split('/')[0] === duckName,
+      `Action Type: Expected a string prefixed by '${duckName}'. Got '${actionType}' instead`
+    )
+  }
 }
 
-function checkUniqueDefinition (actionType) {
-  warning(!alreadyDefined[actionType],
-    `Duplicate definition for Action(${actionType},...`)
+function checkUniqueDefinition (actionType: string): void {
+  warning(
+    !alreadyDefined[actionType],
+    `Duplicate definition for Action(${actionType},...`
+  )
   if (process.env.NODE_ENV !== 'production') {
     alreadyDefined[actionType] = true
   }
 }
 
-function checkActionObject (obj) {
+function checkActionObject (obj): void {
   invariant(typeof obj === 'object', 'Action Object: Expected an object. Got %s instead', obj)
   invariant(typeof obj.creator === 'function', 'Action creator: Expected a function. Got %s instead', obj.creator)
 }
 
-function trackReducers (mapper, actionType, reducerCases, reducers) {
-  if (typeof reducerCases === 'function') { // only one reducer
+export type Action = {type: string, payload?: any, meta?: any}
+type Reducers<U> = { [key: string]: (state: U, action: Action) => U }
+type ReducersCases<U> = Reducers<U> | (state: U, action: Action) => U
+type ReducersWithCreator<U, V> = {
+  creator: (...args: V) => Action,
+  [key: string]: (state: U, action: Action) => U
+}
+
+function trackReducers<U> (
+  mapper: Mapper,
+  actionType: string,
+  reducerCases: ReducersCases<U>,
+  reducers: Reducers<U>
+): void {
+  if (typeof reducerCases === 'function') { // shortcut for only one reducer
     warning(!reducers[actionType], 'Duplicate reducer case for %s', actionType)
     reducers[actionType] = reducerCases
-  } else {
+  } else if (typeof reducerCases === 'object') {
     Object.keys(reducerCases).forEach((reducerType) => {
       const mapping = mapper[reducerType]
       warning(mapping, 'Unknown reducer mapping "%s"', reducerType)
@@ -40,38 +64,44 @@ function trackReducers (mapper, actionType, reducerCases, reducers) {
       warning(!reducers[t], 'Duplicate case for "%s"', t)
       reducers[t] = reducerCases[reducerType]
     })
+  } else {
+    console.error('Wrong type for reducerCases: Expected an object. Got ' + typeof reducerCases + 'instead')
   }
 }
 
-export default function (duckName, initialState = {}, {mapper = defaultMapper} = {}) {
+export default function duck<U> (
+  duckName: string,
+  initialState: U,
+  {mapper = defaultMapper}: {mapper: Mapper} = {}
+) {
   warning(typeof duckName === 'string', 'Fist argument of Duck should be a string (name of the Duck)')
 
-  const reducers = {}
+  const reducers: Reducers<U> = {}
 
   return {
     // new action creators, with corresponding reducers
-    defineAction (actionType, obj) {
+    defineAction<V: [any]> (actionType: string, reducersAndCreator: ReducersWithCreator<U, V>) {
       checkActionTypeName(actionType, duckName)
       checkUniqueDefinition(actionType)
-      checkActionObject(obj)
+      checkActionObject(reducersAndCreator)
       const {
         creator,
         ...reducerCases
-      } = obj
+      } = reducersAndCreator
       trackReducers(mapper, actionType, reducerCases, reducers)
-      return function (...x) {
+      return function (...x: V): Action {
         const actionObject = creator(...x)
         actionObject.type = actionType
         return actionObject
       }
     },
     // additional reducer rules (to match actions from other ducks)
-    addReducerCase (actionType, reducerCases) {
+    addReducerCase (actionType: string, reducerCases: ReducersCases<U>) {
       checkActionTypeName(actionType)
       trackReducers(mapper, actionType, reducerCases, reducers)
     },
     // combined reducer for the duck
-    reducer (state = initialState, action = {}) {
+    reducer (state: U = initialState, action: Action = {type: 'missing action'}): U {
       const transformedState = reducers['*']
                                 ? reducers['*'](state, action)
                                 : state
