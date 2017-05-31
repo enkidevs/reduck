@@ -17,3 +17,5 @@ npm-debug.log*
 
 # Optional Env variables
 .env
+
+.vscode/
