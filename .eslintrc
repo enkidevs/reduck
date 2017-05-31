@@ -3,6 +3,9 @@ extends:
   - standard
   - plugin:import/warnings
   - plugin:import/errors
-parser: babel-eslint
-rules:
-  arrow-parens: 0
+parserOptions:
+  ecmaVersion: 2017
+  sourceType: module
+  ecmaFeatures:
+    jsx: true
+    experimentalObjectRestSpread: true

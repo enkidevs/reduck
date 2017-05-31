@@ -1,13 +1,13 @@
 {
   "name": "reduck",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Opinionated way to create reducers and action creators",
   "main": "build/index.js",
   "jsnext:main": "src/index.js",
   "scripts": {
-    "test": "eslint src",
+    "test": "eslint src && flow",
     "flow": "flow",
-    "prepublish": "make clean build && flow gen-flow-files --out-dir build src/index.js"
+    "prepublish": "make clean build && cp src/index.js build/index.js.flow"
   },
   "repository": {
     "type": "git",
@@ -26,7 +26,8 @@
     "@mathieudutour/js-fatigue": "^1.0.4",
     "babel-eslint": "^7.1.1",
     "babel-preset-flow": "6.23.0",
-    "flow-bin": "0.46.0"
+    "eslint-plugin-flowtype": "2.34.0",
+    "flow-bin": "0.40.0"
   },
   "dependencies": {
     "invariant": "^2.2.1",

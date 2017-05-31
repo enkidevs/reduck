@@ -1,0 +1,9 @@
+---
+plugins:
+  - flowtype
+extends:
+  - standard
+  - plugin:import/warnings
+  - plugin:import/errors
+  - plugin:flowtype/recommended
+parser: babel-eslint
