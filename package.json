@@ -1,7 +1,7 @@
 {
   "name": "reduck",
-  "version": "0.1.2",
-  "description": "",
+  "version": "0.2.0",
+  "description": "Opinionated way to create reducers and action creators",
   "main": "build/index.js",
   "jsnext:main": "src/index.js",
   "scripts": {
