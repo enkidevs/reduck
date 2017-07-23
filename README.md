@@ -52,13 +52,14 @@ export const addTodo = duck.defineAction(ADD_TODO, {
     };
   },
   reducer(state, { payload }) {
-  return {
-    ...state,
-    items: (state.items || []).concat(payload.newTodoItem)
+    return {
+      ...state,
+      items: (state.items || []).concat(payload.newTodoItem)
+    }
   }
 })
 
-// action defined in another duck but this duck still want to react to it
+// action defined in another duck but this duck still wants to react to it
 duck.addReducerCase(LOGOUT, {
   reducer() {
     return initialState;
@@ -124,7 +125,7 @@ This helps with tracking defined actions in each duck.
   * `reducer(state, { payload })`
   The reducer function receives the payload sent by the `creator` and the duck's current `state`. It then calculates the next state and returns it.
 
-_Note:_ The API allows for more cases to be added at your convenience. An example of such cases is discussed furthier in the **Middleware** section.
+_Note:_ The API allows for more cases to be added at your convenience. An example of such cases is discussed further in the **Middleware** section.
 
 `addReducerCases(actionName: String, reducerCases: Object)`
 This method is used similarly to `defineAction` but does **not** define a new action. It is used to define a reducer which will change the duck's state when an action from a different duck is dispatched. Therefore the `actionName` needs to be of an existing action and the `reducerCases` cannot have a `creator`.
@@ -137,7 +138,7 @@ We recommend using **reduck** with the following to packages:
 By adding these to your redux middlewares, you can easily define async server calls as well the reducer cases that should be called when the request returns data or gets rejected.
 
 We define the server call by using a `meta.promise` key in our action creator. We then define `resolve()` and `reject()` reducer cases.
-Given the example above, an `FETCH_TODOS` action that would be used to get a user's stored Todos from the server would look like this:
+Given the example above, a `FETCH_TODOS` action to get the user's stored Todos from the server would look like this:
 
 *ducks/todos.js*
 ```js
@@ -147,7 +148,7 @@ export const fetchTodos = duck.defineAction(FETCH_TODOS, {
       meta: {
         promise: {       // This is the api for redux-object-to-promise
           method: 'GET',
-          url: '/todo'    // Host URL is defined when the store is instantiated so we can use just relative URLs here
+          url: '/todo'   // Host URL is defined when the store is instantiated so we can use just relative URLs here
         }
       }
     }
@@ -155,7 +156,7 @@ export const fetchTodos = duck.defineAction(FETCH_TODOS, {
   reducer(state) {
     return {
       ...state,
-      ready: false,       // setting ready to false while we wait for the network response
+      ready: false,     // setting ready to false while we wait for the network response
     }
   },
   // This is called when the data comes back from the server
@@ -208,6 +209,6 @@ Normally, we would want to add a `reject()` function that would roll back the re
 ## License
 
   MIT
-  
+
 ## Appropriate GIF
 ![Duck!](https://media2.giphy.com/media/ruhPcuDNmS12M/giphy.gif)
