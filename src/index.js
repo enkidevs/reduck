@@ -34,8 +34,8 @@ function checkUniqueDefinition (actionType: string): void {
   }
 }
 
-export function checkActionObject (obj): void {
-  invariant(typeof obj === 'object' && obj !== null, 'Action Object: Expected an object. Got %s instead', obj)
+function checkActionObject (obj): void {
+  invariant(Object.prototype.toString.call(obj) === "[object Object]" && obj !== null, 'Action Object: Expected an object. Got %s instead', obj)
   invariant(typeof obj.creator === 'function', 'Action creator: Expected a function. Got %s instead', obj.creator)
 }
 
