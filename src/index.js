@@ -34,7 +34,7 @@ function checkUniqueDefinition (actionType: string): void {
   }
 }
 
-function checkActionObject (obj): void {
+export function checkActionObject (obj): void {
   invariant(typeof obj === 'object' && obj !== null, 'Action Object: Expected an object. Got %s instead', obj)
   invariant(typeof obj.creator === 'function', 'Action creator: Expected a function. Got %s instead', obj.creator)
 }
@@ -74,7 +74,7 @@ export default function duck<U> (
   initialState: U,
   {mapper = defaultMapper}: {mapper: Mapper} = {}
 ) {
-  warning(typeof duckName === 'string', 'Fist argument of Duck should be a string (name of the Duck)')
+  warning(typeof duckName === 'string', 'First argument of Duck should be a string (name of the Duck)')
 
   const reducers: Reducers<U> = {}
 

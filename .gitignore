@@ -3,6 +3,7 @@ build
 
 # npm
 node_modules
+package-lock.json
 
 # Logs
 logs
@@ -17,5 +18,3 @@ npm-debug.log*
 
 # Optional Env variables
 .env
-
-.vscode/
