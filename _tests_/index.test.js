@@ -14,15 +14,17 @@ const initialState = {
 const duckInstance = new duck('auth', initialState)
 
 describe('reduck', () => {
+  // force console.error to throw an error -> warning does not throw errors like invariant
+  console.error = jest.fn(error => {
+    throw new Error(error)
+  })
   describe('the duck instance', () => {
-    // npm warning does not throw an error it console.errors
-    test.skip('should warn for duckname that is not of type string', () => {
+    test('should warn for duckname that is not of type string', () => {
       expect(() => {
-          new duck({
-            duckname: 'auth'
-          }, initialState)
-        })
-        .toThrow()
+        new duck({
+          duckname: 'auth'
+        }, initialState)
+      }).toThrow('Warning: First argument of Duck should be a string (name of the Duck)')
     })
     test('should have a defineAction method', () => {
       expect(typeof duckInstance.defineAction).toEqual('function')
@@ -49,8 +51,7 @@ describe('reduck', () => {
         })
         .toThrow(`Action Type: Expected a string. Got ${["LOGOUT"]} instead`)
     })
-    // npm warning does not throw an error it console.errors
-    test.skip('should warn for action not prefixed by the duck name', () => {
+    test('should warn for action not prefixed by the duck name', () => {
       expect(() => {
           duckInstance.defineAction(INVALID, {
             creator() {
@@ -61,10 +62,9 @@ describe('reduck', () => {
             }
           })
         })
-        .toThrow()
+        .toThrow(`Warning: Action Type: Expected a string prefixed by 'auth'. Got '${INVALID}' instead`)
     })
-    // npm warning does not throw an error it console.errors
-    test.skip('should warn for duplicate actions', () => {
+    test('should warn for duplicate actions, and warn for duplicate case as a result of the duplicate action', () => {
       duckInstance.defineAction(WHOAMI, {
         creator() {
           return {}
