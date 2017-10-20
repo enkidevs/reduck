@@ -1,9 +1,12 @@
 /* Tests for the duck instance methods */
+import _ from 'lodash';
 import {
   ADD_PRODUCT,
+  ADD_ORDER,
   duckProduct,
-  productState
-} from './test-variables'
+  productState,
+  duckOrder
+} from './test-variables';
 
 const duckInstanceTests = () => {
   // action creator
@@ -15,45 +18,99 @@ const duckInstanceTests = () => {
         }
       };
     },
-    reducer(state, {
-      payload
-    }) {
+    reducer(state, { payload }) {
       return {
         ...state,
         products: (state.products || []).concat(payload.newProduct)
-      }
+      };
     }
-  })
+  });
+
   const addProductAction = addProduct({
     name: 'Laptop',
     price: '2500',
-    SKU: '986236TY'
-  })
-  test('the creator should return the object that will be passed into the reducer', () => {
-    expect(addProductAction)
-      .toEqual({
+    SKU: '986236TY',
+    quantity: 1
+  });
+
+  const addOrder = duckOrder.defineAction(ADD_ORDER, {
+    creator(newOrder) {
+      return {
         payload: {
-          newProduct: {
-            name: 'Laptop',
-            price: '2500',
-            SKU: '986236TY'
-          }
-        },
-        type: 'product.ADD_PRODUCT'
-      })
-  })
-  test('the duck reducer should return the correct state when called with the initial state and action', () => {
-    const returnedState = duckProduct.reducer(productState, addProductAction)
-    expect(returnedState)
-      .toEqual({
-        products: [{
+          newOrder
+        }
+      };
+    },
+    reducer(state, { payload }) {
+      return {
+        ...state,
+        orders: (state.orders || []).concat(payload.newOrder)
+      };
+    }
+  });
+
+  /* may not be the best example, but I cannot think of anything else that a product duck would want to react to */
+  duckProduct.addReducerCase(ADD_ORDER, (state, { payload }) => {
+    /* assume orders can only have one item for the sake of simplicity assumes the ordered
+    product is in the products array and none of the quantities are less than 1 */
+    const matchedProduct = _.find(state.products, {
+      SKU: payload.newOrder.SKU
+    });
+    const newQuantity = +matchedProduct.quantity - +payload.newOrder.quantity;
+    const replace = p => {
+      return p.SKU === matchedProduct.SKU
+        ? _.assign(matchedProduct, { quantity: newQuantity })
+        : p;
+    };
+    if (newQuantity === 0)
+      return {
+        ...state,
+        products: _.filter(state.products, { SKU: !matchedProduct.SKU })
+      };
+    else return { ...state, products: _.map(state.products, replace) };
+  });
+
+  const newOrderAction = addOrder({
+    name: 'Laptop',
+    price: '2500',
+    SKU: '986236TY',
+    quantity: 1,
+    date: new Date(),
+    userId: '63483278gsfjd'
+  });
+
+  const state = duckProduct.reducer(productState, addProductAction);
+
+  test(`the creator should return the object that will be passed into the reducer`, () => {
+    expect(addProductAction).toEqual({
+      payload: {
+        newProduct: {
           name: 'Laptop',
           price: '2500',
-          SKU: '986236TY'
-        }],
-        product: {}
-      })
-  })
-}
+          SKU: '986236TY',
+          quantity: 1
+        }
+      },
+      type: 'product.ADD_PRODUCT'
+    });
+  });
+  test(`the duck reducer should return the correct state when called with the initial state and action`, () => {
+    expect(state).toEqual({
+      products: [
+        {
+          name: 'Laptop',
+          price: '2500',
+          SKU: '986236TY',
+          quantity: 1
+        }
+      ],
+      product: {}
+    });
+  });
+  test(`should return the correct state when the added reducer case is dispatched`, () => {
+    const newState = duckProduct.reducer(state, newOrderAction);
+    expect(newState).toEqual({ products: [], product: {} });
+  });
+};
 
-export default duckInstanceTests
+export default duckInstanceTests;
