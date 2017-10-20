@@ -1,10 +1,11 @@
+/* Tests for invalid input provided to the addReducerCase duck method */
 import {
   DELETE_TODO,
   UPDATE_TODO,
   duckTodo
 } from './test-variables'
 
-const addReducerCaseTests = () => {
+const addReducerCaseTestsInvalid = () => {
   test('should throw for a duplicate reducer case when adding a duplicate case that is of type function', () => {
     duckTodo.defineAction(DELETE_TODO, {
       creator(newTodoItem) {
@@ -77,4 +78,4 @@ const addReducerCaseTests = () => {
   })
 }
 
-export default addReducerCaseTests
+export default addReducerCaseTestsInvalid

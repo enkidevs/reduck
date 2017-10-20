@@ -1,5 +1,4 @@
-/* Tests for the defineAction method on the Duck instance */
-
+/* Tests for invalid input provided to the defineAction duck method */
 import {
   LOGOUT,
   LOGIN,
@@ -11,7 +10,7 @@ import {
   duckTodo
 } from './test-variables'
 
-const defineActionTests = () => {
+const defineActionInputTests = () => {
   test('should throw for invalid action name type', () => {
     expect(() => {
         duckAuth.defineAction(["LOGOUT"], {
@@ -123,4 +122,4 @@ const defineActionTests = () => {
   })
 }
 
-export default defineActionTests
+export default defineActionInputTests

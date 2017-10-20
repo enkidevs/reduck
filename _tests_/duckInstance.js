@@ -1,7 +1,9 @@
 /* Tests for the Duck instance itself */
-
 import Duck from '../src'
-import { duckAuth, authState } from './test-variables'
+import {
+  duckAuth,
+  authState
+} from './test-variables'
 
 const duckInstanceTests = () => {
   test('should warn for duckname that is not of type string', () => {
