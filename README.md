@@ -129,8 +129,7 @@ _Note:_ The API allows for more cases to be added at your convenience. An exampl
 
 `addReducerCases(actionName: String, reducerCases: Object)`
 This method is used similarly to `defineAction` but does **not** define a new action. It is used to define a reducer which will change the duck's state when an action from a different duck is dispatched. Therefore the `actionName` needs to be of an existing action and the `reducerCases` cannot have a `creator`.
-  * add a reducer case with the `actionName` parameter as '*'. This reducer case will be invoked on every action that is dispatched by the duck, and will be applied to the state
-  For Example :
+  * add a reducer case with the `actionName` parameter as `'*'`. This reducer case will be invoked on every action that is dispatched by the duck, and will be applied to the state. For Example :
   ```
   duckProduct.addReducerCase('*', (state, action) => {
     return {
