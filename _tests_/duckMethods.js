@@ -33,6 +33,12 @@ const duckInstanceTests = () => {
     quantity: 1
   });
 
+  const everyCase = duckProduct.addReducerCase('*', (state, action) => {
+    return {
+      ...state
+    };
+  });
+
   const addOrder = duckOrder.defineAction(ADD_ORDER, {
     creator(newOrder) {
       return {
@@ -51,7 +57,7 @@ const duckInstanceTests = () => {
 
   /* may not be the best example, but I cannot think of anything else that a product duck would want to react to */
   duckProduct.addReducerCase(ADD_ORDER, (state, { payload }) => {
-    /* assume orders can only have one item for the sake of simplicity assumes the ordered
+    /* assume orders can only have one item for the sake of simplicity & assumes the ordered
     product is in the products array and none of the quantities are less than 1 */
     const matchedProduct = _.find(state.products, {
       SKU: payload.newOrder.SKU
@@ -80,6 +86,7 @@ const duckInstanceTests = () => {
   });
 
   const state = duckProduct.reducer(productState, addProductAction);
+  let everyCaseState = null;
 
   test(`the creator should return the object that will be passed into the reducer`, () => {
     expect(addProductAction).toEqual({
@@ -110,6 +117,30 @@ const duckInstanceTests = () => {
   test(`should return the correct state when the added reducer case is dispatched`, () => {
     const newState = duckProduct.reducer(state, newOrderAction);
     expect(newState).toEqual({ products: [], product: {} });
+  });
+  test(`expect * reducer case to have been called when a defined action is invoked`, () => {
+    const spy = jest.spyOn(duckProduct, 'reducer');
+    const testProduct = addProduct({
+      name: 'iPhone',
+      price: '850',
+      SKU: '9QWW236TY',
+      quantity: 7
+    });
+    everyCaseState = duckProduct.reducer(state, testProduct);
+    expect(spy).toHaveBeenLastCalledWith(state, testProduct);
+  });
+  test(`expect * reducer case to have been called when an added reducer case is invoked`, () => {
+    const spy = jest.spyOn(duckProduct, 'reducer');
+    const testOrder = addOrder({
+      name: 'iPhone',
+      price: '850',
+      SKU: '9QWW236TY',
+      quantity: 2,
+      date: new Date(),
+      userId: '63483278gsfjd'
+    });
+    duckProduct.reducer(everyCaseState, testOrder);
+    expect(spy).toHaveBeenLastCalledWith(everyCaseState, testOrder);
   });
 };
 
