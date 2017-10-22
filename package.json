@@ -31,7 +31,10 @@
     "babel-preset-flow": "6.23.0",
     "eslint-plugin-flowtype": "2.39.1",
     "flow-bin": "0.57.3",
-    "jest": "^21.2.1"
+    "jest": "^21.2.1",
+    "redux": "^3.7.2",
+    "redux-object-to-promise": "^0.3.3",
+    "redux-optimist-promise": "^0.8.3"
   },
   "dependencies": {
     "invariant": "^2.2.1",

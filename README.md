@@ -140,7 +140,7 @@ This method is used similarly to `defineAction` but does **not** define a new ac
   ```
 
 ### Middleware
-We recommend using **reduck** with the following to packages:
+We recommend using **reduck** with the following two packages:
 - [redux-object-to-promise](https://github.com/mathieudutour/redux-object-to-promise)
 - [redux-optimist-promise](https://github.com/mathieudutour/redux-optimist-promise)
 
