@@ -1,5 +1,7 @@
 # reduck
 
+![Duck!](https://media2.giphy.com/media/ruhPcuDNmS12M/giphy.gif)
+
 [![build](https://travis-ci.org/enkidevs/reduck.svg)](https://travis-ci.org/enkidevs/reduck)
 [![dependencies](https://david-dm.org/enkidevs/reduck.svg)](https://david-dm.org/enkidevs/reduck)
 [![devDependencies](https://david-dm.org/enkidevs/reduck/dev-status.svg)](https://david-dm.org/enkidevs/reduck#info=devDependencies)
@@ -209,6 +211,3 @@ Normally, we would want to add a `reject()` function that would roll back the re
 ## License
 
   MIT
-
-## Appropriate GIF
-![Duck!](https://media2.giphy.com/media/ruhPcuDNmS12M/giphy.gif)
