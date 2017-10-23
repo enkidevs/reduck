@@ -6,10 +6,14 @@
   "jsnext:main": "src/index.js",
   "scripts": {
     "test": "jest",
-    "lint": "eslint src && flow",
+    "lint": "eslint src",
     "flow": "flow",
     "prepublish": "make clean build && cp src/index.js build/index.js.flow"
   },
+  "pre-commit": [
+    "test",
+    "lint"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/enkidevs/reduck.git"
@@ -32,6 +36,7 @@
     "eslint-plugin-flowtype": "2.39.1",
     "flow-bin": "0.57.3",
     "jest": "^21.2.1",
+    "pre-commit": "^1.2.2",
     "redux": "^3.7.2",
     "redux-object-to-promise": "^0.3.3",
     "redux-optimist-promise": "^0.8.3"

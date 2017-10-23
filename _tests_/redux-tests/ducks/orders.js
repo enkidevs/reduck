@@ -1,14 +1,14 @@
-import Duck from 'reduck';
-import { ADD_ORDER } from '../redux/actions';
+import Duck from 'reduck'
+import { ADD_ORDER } from '../redux/actions'
 
 const initialState = {
   orders: []
-};
+}
 
-const duck = new Duck('orders', initialState);
+const duck = new Duck('orders', initialState)
 
 export const fetchOrders = duck.defineAction(ADD_ORDER, {
-  creator(newOrder) {
+  creator (newOrder) {
     return {
       meta: {
         promise: {
@@ -18,14 +18,14 @@ export const fetchOrders = duck.defineAction(ADD_ORDER, {
         },
         optimist: true
       }
-    };
+    }
   },
-  reducer(state, { payload }) {
+  reducer (state, { payload }) {
     return {
       ...state,
       orders: (state.orders || []).concat(payload.newOrder)
-    };
+    }
   }
-});
+})
 
-export default duck.reducer;
+export default duck.reducer

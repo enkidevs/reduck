@@ -1,3 +1,3 @@
-const middleWare = () => {};
+const middleWare = () => {}
 
-export default middleWare;
+export default middleWare

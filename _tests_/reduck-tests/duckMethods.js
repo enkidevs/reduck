@@ -1,59 +1,59 @@
 /* Tests for the duck instance methods */
-import _ from 'lodash';
+import _ from 'lodash'
 import {
   ADD_PRODUCT,
   ADD_ORDER,
   duckProduct,
   productState,
   duckOrder
-} from './test-variables';
+} from './test-variables'
 
 const duckInstanceTests = () => {
   // action creator
   const addProduct = duckProduct.defineAction(ADD_PRODUCT, {
-    creator(newProduct) {
+    creator (newProduct) {
       return {
         payload: {
           newProduct
         }
-      };
+      }
     },
-    reducer(state, { payload }) {
+    reducer (state, { payload }) {
       return {
         ...state,
         products: (state.products || []).concat(payload.newProduct)
-      };
+      }
     }
-  });
+  })
 
   const addProductAction = addProduct({
     name: 'Laptop',
     price: '2500',
     SKU: '986236TY',
     quantity: 1
-  });
+  })
 
   const everyCase = duckProduct.addReducerCase('*', (state, action) => {
     return {
       ...state
-    };
-  });
+    }
+  })
 
   const addOrder = duckOrder.defineAction(ADD_ORDER, {
-    creator(newOrder) {
+    creator (newOrder) {
       return {
         payload: {
           newOrder
         }
-      };
+      }
     },
-    reducer(state, { payload }) {
+    reducer (state, { payload }) {
       return {
         ...state,
         orders: (state.orders || []).concat(payload.newOrder)
-      };
+      }
     }
-  });
+  })
 
   /* may not be the best example, but I cannot think of anything else that a product duck would want to react to */
   duckProduct.addReducerCase(ADD_ORDER, (state, { payload }) => {
@@ -61,20 +61,20 @@ const duckInstanceTests = () => {
     product is in the products array and none of the quantities are less than 1 */
     const matchedProduct = _.find(state.products, {
       SKU: payload.newOrder.SKU
-    });
-    const newQuantity = +matchedProduct.quantity - +payload.newOrder.quantity;
+    })
+    const newQuantity = +matchedProduct.quantity - +payload.newOrder.quantity
     const replace = p => {
       return p.SKU === matchedProduct.SKU
         ? _.assign(matchedProduct, { quantity: newQuantity })
-        : p;
-    };
-    if (newQuantity === 0)
+        : p
+    }
+    if (newQuantity === 0) {
       return {
         ...state,
         products: _.filter(state.products, { SKU: !matchedProduct.SKU })
-      };
-    else return { ...state, products: _.map(state.products, replace) };
-  });
+      }
+    } else return { ...state, products: _.map(state.products, replace) }
+  })
 
   const newOrderAction = addOrder({
     name: 'Laptop',
@@ -83,10 +83,10 @@ const duckInstanceTests = () => {
     quantity: 1,
     date: new Date(),
     userId: '63483278gsfjd'
-  });
+  })
 
-  const state = duckProduct.reducer(productState, addProductAction);
-  let everyCaseState = null;
+  const state = duckProduct.reducer(productState, addProductAction)
+  let everyCaseState = null
 
   test(`the creator should return the object that will be passed into the reducer`, () => {
     expect(addProductAction).toEqual({
@@ -99,8 +99,8 @@ const duckInstanceTests = () => {
         }
       },
       type: 'product.ADD_PRODUCT'
-    });
-  });
+    })
+  })
   test(`the duck reducer should return the correct state when called with the initial state and action`, () => {
     expect(state).toEqual({
       products: [
@@ -112,25 +112,25 @@ const duckInstanceTests = () => {
         }
       ],
       product: {}
-    });
-  });
+    })
+  })
   test(`should return the correct state when the added reducer case is dispatched`, () => {
-    const newState = duckProduct.reducer(state, newOrderAction);
-    expect(newState).toEqual({ products: [], product: {} });
-  });
+    const newState = duckProduct.reducer(state, newOrderAction)
+    expect(newState).toEqual({ products: [], product: {} })
+  })
   test(`expect * reducer case to have been called when a defined action is invoked`, () => {
-    const spy = jest.spyOn(duckProduct, 'reducer');
+    const spy = jest.spyOn(duckProduct, 'reducer')
     const testProduct = addProduct({
       name: 'iPhone',
       price: '850',
       SKU: '9QWW236TY',
       quantity: 7
-    });
-    everyCaseState = duckProduct.reducer(state, testProduct);
-    expect(spy).toHaveBeenLastCalledWith(state, testProduct);
-  });
+    })
+    everyCaseState = duckProduct.reducer(state, testProduct)
+    expect(spy).toHaveBeenLastCalledWith(state, testProduct)
+  })
   test(`expect * reducer case to have been called when an added reducer case is invoked`, () => {
-    const spy = jest.spyOn(duckProduct, 'reducer');
+    const spy = jest.spyOn(duckProduct, 'reducer')
     const testOrder = addOrder({
       name: 'iPhone',
       price: '850',
@@ -138,10 +138,10 @@ const duckInstanceTests = () => {
       quantity: 2,
       date: new Date(),
       userId: '63483278gsfjd'
-    });
-    duckProduct.reducer(everyCaseState, testOrder);
-    expect(spy).toHaveBeenLastCalledWith(everyCaseState, testOrder);
-  });
-};
+    })
+    duckProduct.reducer(everyCaseState, testOrder)
+    expect(spy).toHaveBeenLastCalledWith(everyCaseState, testOrder)
+  })
+}
 
-export default duckInstanceTests;
+export default duckInstanceTests
