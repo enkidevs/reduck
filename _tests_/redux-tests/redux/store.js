@@ -1,9 +1,7 @@
 require('jest-localstorage-mock')
-// import { applyMiddleware, createStore } from 'redux'
 import optimistPromiseMiddleware from 'redux-optimist-promise'
 import objectToPromise from 'redux-object-to-promise'
 import configureMockStore from 'redux-mock-store'
-// import rootReducer from './reducers'
 
 let middlewares = [
   objectToPromise({
@@ -16,9 +14,5 @@ let middlewares = [
 ]
 
 const mockStore = configureMockStore(middlewares)
-
-// const store = mockStore({ ...commentsInitialState, ...postsInitialState })
-
-// const store = createStore(rootReducer, applyMiddleware(...middlewares))
 
 export default mockStore
