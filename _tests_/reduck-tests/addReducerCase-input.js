@@ -46,8 +46,9 @@ const addReducerCaseTestsInvalid = () => {
       reducer (state, { payload }) {
         return {
           ...state,
-          items: (state.items || []).filter(item => {
-            if (item.id !== payload.newTodoItem) return item
+          items: (state.items || []).map(item => {
+            if (item.id === payload.newTodoItem.id) return payload.newTodoItem
+            else return item
           })
         }
       }
@@ -57,8 +58,9 @@ const addReducerCaseTestsInvalid = () => {
         reducer (state, { payload }) {
           return {
             ...state,
-            items: (state.items || []).filter(item => {
-              if (item.id !== payload.newTodoItem) return item
+            items: (state.items || []).map(item => {
+              if (item.id === payload.newTodoItem.id) return payload.newTodoItem
+              else return item
             })
           }
         }

@@ -1,8 +1,9 @@
 import Duck from '../../../src'
-import { ADD_POST, FETCH_POSTS } from '../redux/actions'
+import { ADD_POST, FETCH_POSTS, UPDATE_POST } from '../redux/actions'
 
 export const postsInitialState = {
-  posts: []
+  posts: [],
+  ready: false
 }
 
 const duck = new Duck('posts', postsInitialState)
@@ -10,6 +11,9 @@ const duck = new Duck('posts', postsInitialState)
 export const postPost = duck.defineAction(ADD_POST, {
   creator (newPost) {
     return {
+      payload: {
+        newPost
+      },
       meta: {
         promise: {
           method: 'POST',
@@ -23,7 +27,34 @@ export const postPost = duck.defineAction(ADD_POST, {
   reducer (state, { payload }) {
     return {
       ...state,
-      comments: (state.posts || []).concat(payload.newPost)
+      posts: (state.posts || []).concat(payload.newPost),
+      ready: true
+    }
+  }
+})
+
+export const updatePost = duck.defineAction(UPDATE_POST, {
+  creator (updatedPost) {
+    return {
+      payload: { updatedPost },
+      meta: {
+        promise: {
+          method: 'PUT',
+          url: '/posts/fail',
+          data: { ...updatedPost }
+        },
+        optimist: true
+      }
+    }
+  },
+  reducer (state, { payload }) {
+    return {
+      ...state,
+      posts: (state.posts || []).map(post => {
+        if (post.id === payload.updatedPost.id) return payload.updatedPost
+        else return post
+      }),
+      ready: true
     }
   }
 })

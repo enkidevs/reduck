@@ -41,12 +41,14 @@ export const fetchComments = duck.defineAction(FETCH_COMMENTS, {
 })
 
 export const updateComment = duck.defineAction(UPDATE_COMMENT, {
-  creator () {
+  creator (updateComment) {
     return {
+      payload: { updateComment },
       meta: {
         promise: {
           method: 'PUT',
-          url: '/posts/1/comment'
+          url: '/posts/1/comment',
+          data: { ...updateComment }
         }
       }
     }
@@ -60,8 +62,9 @@ export const updateComment = duck.defineAction(UPDATE_COMMENT, {
   resolve (state, { payload }) {
     return {
       ...state,
-      comments: (state.comments || []).filter(comment => {
-        if (comment.id !== payload.data.id) return comment
+      comments: (state.comments || []).map(comment => {
+        if (comment.id === payload.data.id) return payload.data
+        else return comment
       }),
       ready: true
     }
@@ -77,6 +80,7 @@ export const updateComment = duck.defineAction(UPDATE_COMMENT, {
 export const postComment = duck.defineAction(ADD_COMMENT, {
   creator (newComment) {
     return {
+      payload: { newComment },
       meta: {
         promise: {
           method: 'POST',

@@ -15,8 +15,11 @@ import {
   FETCH_COMMENTS,
   FETCH_POSTS,
   ADD_COMMENT,
-  UPDATE_COMMENT
+  UPDATE_COMMENT,
+  ADD_POST,
+  UPDATE_POST
 } from './redux/actions'
+import _ from 'lodash'
 
 const middleWare = () => {
   describe('tests that the middleware handles resolves and rejects correctly', () => {
@@ -88,11 +91,10 @@ const middleWare = () => {
     })
   })
   describe('tests resolve and reject reducer cases update state correctly when using middleware', () => {
-    test('should return the initial state', () => {
-      expect(commentReducer(undefined, {})).toEqual({
-        comments: [],
-        ready: false
-      })
+    test('should not update the  state for FETCH_COMMENTS action', () => {
+      expect(
+        commentReducer(commentsInitialState, { type: FETCH_COMMENTS })
+      ).toEqual(commentsInitialState)
     })
     test('should update state for FETCH_COMMENTS_RESOLVED', () => {
       expect(
@@ -137,6 +139,32 @@ const middleWare = () => {
         ],
         ready: true
       })
+    })
+    test('should roll back optimisitc update to the state when UPDATE_POST action rejects', () => {
+      const optimisitcState = postReducer(postsInitialState, {
+        type: UPDATE_POST,
+        payload: {
+          updatedPost: { title: 'Jest', id: 1, username: '@brian' }
+        }
+      })
+      expect(
+        postReducer(optimisitcState, {
+          type: `${UPDATE_POST}_REJECTED`
+        })
+      ).toEqual(_.assign(postsInitialState, { ready: true }))
+    })
+    test('should keep optimistic state when ADD_POST action resolves', () => {
+      const optimisitcState = postReducer(postsInitialState, {
+        type: ADD_POST,
+        payload: {
+          newPost: { title: 'Javascript', id: 5, username: '@sean' }
+        }
+      })
+      expect(
+        postReducer(optimisitcState, {
+          type: `${ADD_POST}_RESOLVED`
+        })
+      ).toEqual(optimisitcState)
     })
   })
 }
