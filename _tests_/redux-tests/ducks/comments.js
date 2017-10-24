@@ -1,20 +1,20 @@
-import Duck from 'reduck'
-import { FETCH_MENU } from '../redux/actions'
+import Duck from '../../../src'
+import { FETCH_COMMENTS } from '../redux/actions'
 
-const initialState = {
-  menu: [],
+export const commentsInitialState = {
+  comments: [],
   ready: false
 }
 
-const duck = new Duck('menu', initialState)
+const duck = new Duck('comments', commentsInitialState)
 
-export const fetchMenu = duck.defineAction(FETCH_MENU, {
+export const fetchComments = duck.defineAction(FETCH_COMMENTS, {
   creator () {
     return {
       meta: {
         promise: {
           method: 'GET',
-          url: '/menu'
+          url: '/posts/1/comments'
         }
       }
     }
@@ -28,7 +28,7 @@ export const fetchMenu = duck.defineAction(FETCH_MENU, {
   resolve (state, { payload }) {
     return {
       ...state,
-      menu: payload.data.menu,
+      comments: payload.data.comments,
       ready: true
     }
   },
