@@ -1,5 +1,5 @@
 import Duck from '../../../src'
-import { ADD_POST } from '../redux/actions'
+import { ADD_POST, FETCH_POSTS } from '../redux/actions'
 
 export const postsInitialState = {
   posts: []
@@ -7,19 +7,14 @@ export const postsInitialState = {
 
 const duck = new Duck('posts', postsInitialState)
 
-export const postPosts = duck.defineAction(ADD_POST, {
+export const postPost = duck.defineAction(ADD_POST, {
   creator (newPost) {
     return {
       meta: {
         promise: {
           method: 'POST',
           url: '/posts',
-          data: {
-            title: 'Testing with Jest',
-            body:
-              'Lorem ipsum dolor sit amet, quo no congue mentitum. Soleat posidonium eos ne, clita argumentum in usu. Justo debet mei eu, ea iriure scriptorem vituperatoribus vix. Nam te choro oblique dissentias, has ridens evertitur id.',
-            userId: 1
-          }
+          data: { ...newPost }
         },
         optimist: true
       }
@@ -29,6 +24,38 @@ export const postPosts = duck.defineAction(ADD_POST, {
     return {
       ...state,
       comments: (state.posts || []).concat(payload.newPost)
+    }
+  }
+})
+
+export const fetchPosts = duck.defineAction(FETCH_POSTS, {
+  creator () {
+    return {
+      meta: {
+        promise: {
+          method: 'GET',
+          url: '/posts/fail'
+        }
+      }
+    }
+  },
+  reducer (state) {
+    return {
+      ...state,
+      ready: false
+    }
+  },
+  resolve (state, { payload }) {
+    return {
+      ...state,
+      posts: payload.data,
+      ready: true
+    }
+  },
+  reject (state) {
+    return {
+      ...state,
+      ready: true
     }
   }
 })

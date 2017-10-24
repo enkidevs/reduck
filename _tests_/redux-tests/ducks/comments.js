@@ -1,5 +1,5 @@
 import Duck from '../../../src'
-import { FETCH_COMMENTS } from '../redux/actions'
+import { FETCH_COMMENTS, ADD_COMMENT } from '../redux/actions'
 
 export const commentsInitialState = {
   comments: [],
@@ -28,7 +28,7 @@ export const fetchComments = duck.defineAction(FETCH_COMMENTS, {
   resolve (state, { payload }) {
     return {
       ...state,
-      comments: payload.data.comments,
+      comments: payload.data,
       ready: true
     }
   },
@@ -36,6 +36,27 @@ export const fetchComments = duck.defineAction(FETCH_COMMENTS, {
     return {
       ...state,
       ready: true
+    }
+  }
+})
+
+export const postComment = duck.defineAction(ADD_COMMENT, {
+  creator (newComment) {
+    return {
+      meta: {
+        promise: {
+          method: 'POST',
+          url: '/posts/1/comments/fail',
+          data: { ...newComment }
+        },
+        optimist: true
+      }
+    }
+  },
+  reducer (state, { payload }) {
+    return {
+      ...state,
+      comments: (state.posts || []).concat(payload.newComment)
     }
   }
 })
