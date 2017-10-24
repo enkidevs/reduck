@@ -33,7 +33,7 @@ const duckInstanceTests = () => {
     quantity: 1
   })
 
-  const everyCase = duckProduct.addReducerCase('*', (state, action) => {
+  duckProduct.addReducerCase('*', (state, action) => {
     return {
       ...state
     }

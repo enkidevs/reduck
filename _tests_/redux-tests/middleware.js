@@ -140,16 +140,24 @@ const middleWare = () => {
         ready: true
       })
     })
-    test('should roll back optimisitc update to the state when UPDATE_POST action rejects', () => {
-      const optimisitcState = postReducer(postsInitialState, {
+    test('should roll back optimistic update to the state when UPDATE_POST action rejects', () => {
+      const optimisticState = postReducer(postsInitialState, {
         type: UPDATE_POST,
         payload: {
           updatedPost: { title: 'Jest', id: 1, username: '@brian' }
-        }
+        },
+        optimist: { type: 'BEGIN', id: 2 }
       })
       expect(
-        postReducer(optimisitcState, {
-          type: `${UPDATE_POST}_REJECTED`
+        postReducer(optimisticState, {
+          type: `${UPDATE_POST}_REJECTED`,
+          payload: Error,
+          meta: {
+            payload: {
+              updatedPost: { title: 'Jest', id: 1, username: '@brian' }
+            }
+          },
+          optimist: { type: 'REVERT', id: 2 }
         })
       ).toEqual(_.assign(postsInitialState, { ready: true }))
     })
@@ -158,11 +166,19 @@ const middleWare = () => {
         type: ADD_POST,
         payload: {
           newPost: { title: 'Javascript', id: 5, username: '@sean' }
-        }
+        },
+        optimist: { type: 'BEGIN', id: 3 }
       })
       expect(
         postReducer(optimisitcState, {
-          type: `${ADD_POST}_RESOLVED`
+          type: `${ADD_POST}_RESOLVED`,
+          payload: { title: 'Javascript', id: 5, username: '@sean' },
+          meta: {
+            payload: {
+              newPost: { title: 'Javascript', id: 5, username: '@sean' }
+            }
+          },
+          optimist: { type: 'COMMIT', id: 3 }
         })
       ).toEqual(optimisitcState)
     })
