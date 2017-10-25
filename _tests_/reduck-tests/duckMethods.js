@@ -1,5 +1,8 @@
 /* Tests for the duck instance methods */
-import _ from 'lodash'
+import map from 'lodash.map'
+import filter from 'lodash.filter'
+import assign from 'lodash.assign'
+import find from 'lodash.find'
 import {
   ADD_PRODUCT,
   ADD_ORDER,
@@ -59,21 +62,21 @@ const duckInstanceTests = () => {
   duckProduct.addReducerCase(ADD_ORDER, (state, { payload }) => {
     /* assume orders can only have one item for the sake of simplicity & assumes the ordered
     product is in the products array and none of the quantities are less than 1 */
-    const matchedProduct = _.find(state.products, {
+    const matchedProduct = find(state.products, {
       SKU: payload.newOrder.SKU
     })
     const newQuantity = +matchedProduct.quantity - +payload.newOrder.quantity
     const replace = p => {
       return p.SKU === matchedProduct.SKU
-        ? _.assign(matchedProduct, { quantity: newQuantity })
+        ? assign(matchedProduct, { quantity: newQuantity })
         : p
     }
     if (newQuantity === 0) {
       return {
         ...state,
-        products: _.filter(state.products, { SKU: !matchedProduct.SKU })
+        products: filter(state.products, { SKU: !matchedProduct.SKU })
       }
-    } else return { ...state, products: _.map(state.products, replace) }
+    } else return { ...state, products: map(state.products, replace) }
   })
 
   const newOrderAction = addOrder({

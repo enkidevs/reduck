@@ -1,5 +1,6 @@
 /* Tests for duck middleware */
 
+import assign from 'lodash.assign'
 import mockStore from './redux/store'
 import commentReducer, {
   fetchComments,
@@ -19,7 +20,6 @@ import {
   ADD_POST,
   UPDATE_POST
 } from './redux/actions'
-import _ from 'lodash'
 
 const middleWare = () => {
   describe('tests that the middleware handles resolves and rejects correctly', () => {
@@ -159,7 +159,7 @@ const middleWare = () => {
           },
           optimist: { type: 'REVERT', id: 2 }
         })
-      ).toEqual(_.assign(postsInitialState, { ready: true }))
+      ).toEqual(assign(postsInitialState, { ready: true }))
     })
     test('should keep optimistic state when ADD_POST action resolves', () => {
       const optimisitcState = postReducer(postsInitialState, {
