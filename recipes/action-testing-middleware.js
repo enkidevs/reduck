@@ -1,4 +1,3 @@
-/* eslint-disable */
 /* globals localStorage */
 
 import * as actions from '../actions'
@@ -7,7 +6,7 @@ const testedActions = localStorage.testedActions
   ? JSON.parse(localStorage.testedActions)
   : {}
 
-function untested() {
+function untested () {
   return Object.keys(actions)
     .map(k => actions[k])
     .filter(a => !testedActions[a])

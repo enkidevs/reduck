@@ -1,4 +1,3 @@
-/* eslint-disable */
 /* globals describe, it */
 
 import { assert } from 'chai'
