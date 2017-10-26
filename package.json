@@ -1,6 +1,6 @@
 {
   "name": "reduck",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Opinionated way to create reducers and action creators",
   "main": "build/index.js",
   "jsnext:main": "src/index.js",
@@ -10,10 +10,7 @@
     "flow": "flow",
     "prepublish": "make clean build && cp src/index.js build/index.js.flow"
   },
-  "pre-commit": [
-    "test",
-    "lint"
-  ],
+  "pre-commit": ["test", "lint"],
   "repository": {
     "type": "git",
     "url": "https://github.com/enkidevs/reduck.git"
@@ -21,15 +18,9 @@
   "homepage": "https://github.com/enkidevs/reduck",
   "keywords": [],
   "author": "Mathieu Dutour <mathieu@dutour.me>",
-  "files": [
-    "build/",
-    "src",
-    "!**/__tests__/**"
-  ],
+  "files": ["build/", "src", "!**/__tests__/**"],
   "jest": {
-    "setupFiles": [
-      "jest-localstorage-mock"
-    ],
+    "setupFiles": ["jest-localstorage-mock"],
     "testEnvironment": "node"
   },
   "license": "MIT",
