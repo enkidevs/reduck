@@ -68,7 +68,7 @@ jobs:
           at: ~/reduck
       - run:
           name: Lint
-          command: npm run test:ci
+          command: npm run test
 
 workflows:
   version: 2
