@@ -1,5 +1,5 @@
 /* Tests for the Duck instance itself */
-import Duck from '../../src'
+import Duck from '../../index'
 import { duckAuth, authState } from './test-variables'
 
 const duckInstanceTests = () => {

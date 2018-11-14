@@ -1,4 +1,4 @@
-import Duck from '../../src'
+import Duck from '../../index'
 
 // action types
 export const LOGOUT = 'auth.LOGOUT'

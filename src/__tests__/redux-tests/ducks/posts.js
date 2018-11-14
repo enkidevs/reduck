@@ -1,4 +1,4 @@
-import Duck from '../../../src'
+import Duck from '../../../index'
 import { ADD_POST, FETCH_POSTS, UPDATE_POST } from '../redux/actions'
 
 export const postsInitialState = {

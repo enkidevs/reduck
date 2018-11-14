@@ -10,7 +10,10 @@
     "flow": "flow",
     "prepublish": "make clean build && cp src/index.js build/index.js.flow"
   },
-  "pre-commit": ["test", "lint"],
+  "pre-commit": [
+    "test",
+    "lint"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/enkidevs/reduck.git"
@@ -18,9 +21,15 @@
   "homepage": "https://github.com/enkidevs/reduck",
   "keywords": [],
   "author": "Mathieu Dutour <mathieu@dutour.me>",
-  "files": ["build/", "src", "!**/__tests__/**"],
+  "files": [
+    "build/",
+    "src",
+    "!**/__tests__/**"
+  ],
   "jest": {
-    "setupFiles": ["jest-localstorage-mock"],
+    "setupFiles": [
+      "jest-localstorage-mock"
+    ],
     "testEnvironment": "node"
   },
   "license": "MIT",
@@ -33,7 +42,7 @@
     "eslint-plugin-flowtype": "2.39.1",
     "eslint-plugin-jest": "^21.2.0",
     "flow-bin": "0.57.3",
-    "jest": "^21.2.1",
+    "jest": "^23.6.0",
     "jest-localstorage-mock": "^2.0.1",
     "lodash.assign": "^4.2.0",
     "lodash.filter": "^4.6.0",

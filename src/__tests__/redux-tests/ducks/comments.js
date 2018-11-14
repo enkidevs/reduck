@@ -1,4 +1,4 @@
-import Duck from '../../../src'
+import Duck from '../../../index'
 import { FETCH_COMMENTS, ADD_COMMENT, UPDATE_COMMENT } from '../redux/actions'
 
 export const commentsInitialState = {
