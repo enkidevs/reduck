@@ -1,20 +1,12 @@
----
-env:
-  jest/globals: true
 plugins:
   - flowtype
-  - jest
 extends:
-  - standard
-  - plugin:import/warnings
-  - plugin:import/errors
+  - "@enkidevs/eslint-config-backend"
   - plugin:flowtype/recommended
 parser: babel-eslint
 rules:
-  jest/no-disabled-tests: 1
-  jest/no-focused-test: 0
-  jest/no-identical-title: 2
-  jest/valid-expect: 2
+  node/no-unsupported-features/es-syntax: 0
+  no-unused-vars: 1
   no-new: 0
 globals:
   localStorage: true
