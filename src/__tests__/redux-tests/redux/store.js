@@ -1,17 +1,17 @@
-import optimistPromiseMiddleware from "redux-optimist-promise";
-import objectToPromise from "redux-object-to-promise";
-import configureMockStore from "redux-mock-store";
+import optimistPromiseMiddleware from 'redux-optimist-promise';
+import objectToPromise from 'redux-object-to-promise';
+import configureMockStore from 'redux-mock-store';
 
-require("jest-localstorage-mock");
+require('jest-localstorage-mock');
 
 const middlewares = [
   objectToPromise({
     axiosOptions: {
-      baseURL: "https://jsonplaceholder.typicode.com"
+      baseURL: 'https://jsonplaceholder.typicode.com',
     },
-    tokenOptions: { storage: localStorage, key: "token-key" }
+    tokenOptions: { storage: localStorage, key: 'token-key' },
   }),
-  optimistPromiseMiddleware()
+  optimistPromiseMiddleware(),
 ];
 
 const mockStore = configureMockStore(middlewares);

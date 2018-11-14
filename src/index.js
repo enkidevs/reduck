@@ -1,9 +1,9 @@
 // @flow
-import warning from "warning";
-import invariant from "invariant";
+import warning from 'warning';
+import invariant from 'invariant';
 
 type Mapper = {
-  [string]: (actionType: string) => string
+  [string]: (actionType: string) => string,
 };
 
 const defaultMapper: Mapper = {
@@ -15,21 +15,21 @@ const defaultMapper: Mapper = {
   },
   reject(actionType) {
     return `${actionType}_REJECTED`;
-  }
+  },
 };
 
 export const alreadyDefined = {};
 
 function checkActionTypeName(actionType: string, duckName?: string): void {
   invariant(
-    typeof actionType === "string",
-    "Action Type: Expected a string. Got %s instead",
+    typeof actionType === 'string',
+    'Action Type: Expected a string. Got %s instead',
     actionType
   );
   if (duckName) {
     warning(
-      actionType.split(".")[0] === duckName ||
-        actionType.split("/")[0] === duckName,
+      actionType.split('.')[0] === duckName ||
+        actionType.split('/')[0] === duckName,
       `Action Type: Expected a string prefixed by '${duckName}'. Got '${actionType}' instead`
     );
   }
@@ -40,20 +40,20 @@ function checkUniqueDefinition(actionType: string): void {
     !alreadyDefined[actionType],
     `Duplicate definition for Action(${actionType},...`
   );
-  if (process.env.NODE_ENV !== "production") {
+  if (process.env.NODE_ENV !== 'production') {
     alreadyDefined[actionType] = true;
   }
 }
 
 function checkActionObject(obj): void {
   invariant(
-    Object.prototype.toString.call(obj) === "[object Object]" && obj !== null,
-    "Action Object: Expected an object. Got %s instead",
+    Object.prototype.toString.call(obj) === '[object Object]' && obj !== null,
+    'Action Object: Expected an object. Got %s instead',
     obj
   );
   invariant(
-    typeof obj.creator === "function",
-    "Action creator: Expected a function. Got %s instead",
+    typeof obj.creator === 'function',
+    'Action creator: Expected a function. Got %s instead',
     obj.creator
   );
 }
@@ -63,7 +63,7 @@ type Reducers<U> = { [key: string]: (state: U, action: Action) => U };
 type ReducersCases<U> = Reducers<U> | ((state: U, action: Action) => U);
 type ReducersWithCreator<U, V> = {
   creator: (...args: V) => Action,
-  [key: string]: (state: U, action: Action) => U
+  [key: string]: (state: U, action: Action) => U,
 };
 
 // eslint-disable-next-line max-params
@@ -73,11 +73,11 @@ function trackReducers<U>(
   reducerCases: ReducersCases<U>,
   reducers: Reducers<U>
 ): void {
-  if (typeof reducerCases === "function") {
+  if (typeof reducerCases === 'function') {
     // shortcut for only one reducer
-    warning(!reducers[actionType], "Duplicate reducer case for %s", actionType);
+    warning(!reducers[actionType], 'Duplicate reducer case for %s', actionType);
     reducers[actionType] = reducerCases;
-  } else if (typeof reducerCases === "object") {
+  } else if (typeof reducerCases === 'object') {
     Object.keys(reducerCases).forEach(reducerType => {
       const mapping = mapper[reducerType];
       warning(mapping, 'Unknown reducer mapping "%s"', reducerType);
@@ -98,8 +98,8 @@ export default function duck<U>(
   { mapper = defaultMapper }: { mapper: Mapper } = {}
 ) {
   warning(
-    typeof duckName === "string",
-    "First argument of Duck should be a string (name of the Duck)"
+    typeof duckName === 'string',
+    'First argument of Duck should be a string (name of the Duck)'
   );
 
   const reducers: Reducers<U> = {};
@@ -129,14 +129,14 @@ export default function duck<U>(
     // combined reducer for the duck
     reducer(
       state: U = initialState,
-      action: Action = { type: "missing action" }
+      action: Action = { type: 'missing action' }
     ): U {
-      const transformedState = reducers["*"]
-        ? reducers["*"](state, action)
+      const transformedState = reducers['*']
+        ? reducers['*'](state, action)
         : state;
       return reducers[action.type]
         ? reducers[action.type](transformedState, action)
         : transformedState;
-    }
+    },
   };
 }

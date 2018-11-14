@@ -1,36 +1,36 @@
-import Duck from "../../../index";
-import { ADD_POST, FETCH_POSTS, UPDATE_POST } from "../redux/actions";
+import Duck from '../../../index';
+import { ADD_POST, FETCH_POSTS, UPDATE_POST } from '../redux/actions';
 
 export const postsInitialState = {
   posts: [],
-  ready: false
+  ready: false,
 };
 
-const duck = new Duck("posts", postsInitialState);
+const duck = new Duck('posts', postsInitialState);
 
 export const postPost = duck.defineAction(ADD_POST, {
   creator(newPost) {
     return {
       payload: {
-        newPost
+        newPost,
       },
       meta: {
         promise: {
-          method: "POST",
-          url: "/posts",
-          data: { ...newPost }
+          method: 'POST',
+          url: '/posts',
+          data: { ...newPost },
         },
-        optimist: true
-      }
+        optimist: true,
+      },
     };
   },
   reducer(state, { payload }) {
     return {
       ...state,
       posts: (state.posts || []).concat(payload.newPost),
-      ready: true
+      ready: true,
     };
-  }
+  },
 });
 
 export const updatePost = duck.defineAction(UPDATE_POST, {
@@ -39,12 +39,12 @@ export const updatePost = duck.defineAction(UPDATE_POST, {
       payload: { updatedPost },
       meta: {
         promise: {
-          method: "PUT",
-          url: "/posts/fail",
-          data: { ...updatedPost }
+          method: 'PUT',
+          url: '/posts/fail',
+          data: { ...updatedPost },
         },
-        optimist: true
-      }
+        optimist: true,
+      },
     };
   },
   reducer(state, { payload }) {
@@ -54,9 +54,9 @@ export const updatePost = duck.defineAction(UPDATE_POST, {
         if (post.id === payload.updatedPost.id) return payload.updatedPost;
         return post;
       }),
-      ready: true
+      ready: true,
     };
-  }
+  },
 });
 
 export const fetchPosts = duck.defineAction(FETCH_POSTS, {
@@ -64,31 +64,31 @@ export const fetchPosts = duck.defineAction(FETCH_POSTS, {
     return {
       meta: {
         promise: {
-          method: "GET",
-          url: "/posts/fail"
-        }
-      }
+          method: 'GET',
+          url: '/posts/fail',
+        },
+      },
     };
   },
   reducer(state) {
     return {
       ...state,
-      ready: false
+      ready: false,
     };
   },
   resolve(state, { payload }) {
     return {
       ...state,
       posts: payload.data,
-      ready: true
+      ready: true,
     };
   },
   reject(state) {
     return {
       ...state,
-      ready: true
+      ready: true,
     };
-  }
+  },
 });
 
 export default duck.reducer;

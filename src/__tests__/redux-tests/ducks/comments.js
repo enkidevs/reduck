@@ -1,43 +1,43 @@
-import Duck from "../../../index";
-import { FETCH_COMMENTS, ADD_COMMENT, UPDATE_COMMENT } from "../redux/actions";
+import Duck from '../../../index';
+import { FETCH_COMMENTS, ADD_COMMENT, UPDATE_COMMENT } from '../redux/actions';
 
 export const commentsInitialState = {
   comments: [],
-  ready: false
+  ready: false,
 };
 
-const duck = new Duck("comments", commentsInitialState);
+const duck = new Duck('comments', commentsInitialState);
 
 export const fetchComments = duck.defineAction(FETCH_COMMENTS, {
   creator() {
     return {
       meta: {
         promise: {
-          method: "GET",
-          url: "/posts/1/comments"
-        }
-      }
+          method: 'GET',
+          url: '/posts/1/comments',
+        },
+      },
     };
   },
   reducer(state) {
     return {
       ...state,
-      ready: false
+      ready: false,
     };
   },
   resolve(state, { payload }) {
     return {
       ...state,
       comments: payload.data,
-      ready: true
+      ready: true,
     };
   },
   reject(state) {
     return {
       ...state,
-      ready: true
+      ready: true,
     };
-  }
+  },
 });
 
 export const updateComment = duck.defineAction(UPDATE_COMMENT, {
@@ -46,17 +46,17 @@ export const updateComment = duck.defineAction(UPDATE_COMMENT, {
       payload: { updateCommentObj },
       meta: {
         promise: {
-          method: "PUT",
-          url: "/posts/1/comment",
-          data: { ...updateCommentObj }
-        }
-      }
+          method: 'PUT',
+          url: '/posts/1/comment',
+          data: { ...updateCommentObj },
+        },
+      },
     };
   },
   reducer(state) {
     return {
       ...state,
-      ready: false
+      ready: false,
     };
   },
   resolve(state, { payload }) {
@@ -66,15 +66,15 @@ export const updateComment = duck.defineAction(UPDATE_COMMENT, {
         if (comment.id === payload.data.id) return payload.data;
         return comment;
       }),
-      ready: true
+      ready: true,
     };
   },
   reject(state) {
     return {
       ...state,
-      ready: true
+      ready: true,
     };
-  }
+  },
 });
 
 export const postComment = duck.defineAction(ADD_COMMENT, {
@@ -83,20 +83,20 @@ export const postComment = duck.defineAction(ADD_COMMENT, {
       payload: { newComment },
       meta: {
         promise: {
-          method: "POST",
-          url: "/posts/1/comments/fail",
-          data: { ...newComment }
+          method: 'POST',
+          url: '/posts/1/comments/fail',
+          data: { ...newComment },
         },
-        optimist: true
-      }
+        optimist: true,
+      },
     };
   },
   reducer(state, { payload }) {
     return {
       ...state,
-      comments: (state.posts || []).concat(payload.newComment)
+      comments: (state.posts || []).concat(payload.newComment),
     };
-  }
+  },
 });
 
 export default duck.reducer;
