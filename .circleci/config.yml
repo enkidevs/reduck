@@ -1,0 +1,86 @@
+version: 2
+
+jobs:
+  install:
+    working_directory: ~/reduck
+    docker:
+      - image: circleci/node:8.10.0
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "package.json" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
+      - attach_workspace:
+          at: ~/reduck
+      - run:
+          name: NPM Install
+          command: npm install
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "package.json" }}
+      - persist_to_workspace:
+          root: ~/reduck
+          paths: ./node_modules
+  build:
+    working_directory: ~/reduck
+    docker:
+      - image: circleci/node:8.10.0
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/reduck
+      - run:
+          name: Build
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              NODE_ENV=production \
+              npm run build
+            else
+              NODE_ENV=development \
+              npm run build
+            fi
+      - persist_to_workspace:
+          root: ~/reduck
+          paths:
+            - ./dist
+            - ./es
+  lint:
+    working_directory: ~/reduck
+    docker:
+      - image: circleci/node:8.10.0
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/reduck
+      - run:
+          name: Lint
+          command: npm run lint
+  test:
+    working_directory: ~/reduck
+    docker:
+      - image: circleci/node:8.10.0
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/reduck
+      - run:
+          name: Lint
+          command: npm run test:ci
+
+workflows:
+  version: 2
+  install_build_lint_test:
+    jobs:
+      - install
+      - build:
+          requires:
+            - install
+      - lint:
+          requires:
+            - install
+      - test:
+          requires:
+            - install
