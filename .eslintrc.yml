@@ -1,12 +1,12 @@
-plugins:
-  - flowtype
 extends:
-  - "@enkidevs/eslint-config-backend"
+  - '@enkidevs/eslint-config-backend'
   - plugin:flowtype/recommended
 parser: babel-eslint
+plugins:
+  - flowtype
 rules:
-  node/no-unsupported-features/es-syntax: 0
-  no-unused-vars: 1
-  no-new: 0
+  node/no-unsupported-features/es-syntax: off
+  no-unused-vars: warn
+  no-new: off
 globals:
   localStorage: true
