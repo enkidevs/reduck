@@ -5,12 +5,34 @@
   "main": "build/index.js",
   "jsnext:main": "src/index.js",
   "scripts": {
+    "check-branch": "enkidevs-assert-restricted-branch",
+    "build:cjs": "BABEL_ENV=cjs babel src --out-dir dist --ignore \"src/__tests__\"",
+    "build:es": "BABEL_ENV=es babel src --out-dir es --ignore \"src/__tests__\"",
+    "build": "npm run clean && npm run build:es && npm run build:cjs",
+    "clean": "trash dist es",
     "test": "jest",
+    "format": "prettier --write 'src/**/*.js'",
     "lint": "eslint .",
-    "flow": "flow",
-    "prepublish": "make clean build && cp src/index.js build/index.js.flow"
+    "flow": "flow"
   },
-  "pre-commit": ["test", "lint"],
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "linters": {
+      "*.js": [
+        "npm run check-branch",
+        "npm run format",
+        "npm run lint",
+        "git add"
+      ]
+    }
+  },
+  "engines": {
+    "node": "^8.10.0"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/enkidevs/reduck.git"
@@ -18,32 +40,43 @@
   "homepage": "https://github.com/enkidevs/reduck",
   "keywords": [],
   "author": "Mathieu Dutour <mathieu@dutour.me>",
-  "files": ["build/", "src", "!**/__tests__/**"],
+  "files": [
+    "build/",
+    "src",
+    "!**/__tests__/**"
+  ],
   "jest": {
-    "setupFiles": ["jest-localstorage-mock"],
+    "setupFiles": [
+      "jest-localstorage-mock"
+    ],
     "testEnvironment": "node"
   },
   "license": "MIT",
   "devDependencies": {
+    "@enkidevs/assert-restricted-branch": "^1.0.2",
+    "@enkidevs/eslint-config-backend": "^0.2.3",
     "@mathieudutour/js-fatigue": "^1.0.4",
     "babel-eslint": "^8.0.1",
     "babel-jest": "^21.2.0",
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-flow": "6.23.0",
+    "eslint": "^5.9.0",
     "eslint-plugin-flowtype": "2.39.1",
-    "eslint-plugin-jest": "^21.2.0",
     "flow-bin": "0.57.3",
-    "jest": "^21.2.1",
+    "husky": "^1.1.4",
+    "jest": "^23.6.0",
     "jest-localstorage-mock": "^2.0.1",
+    "lint-staged": "^8.0.4",
     "lodash.assign": "^4.2.0",
     "lodash.filter": "^4.6.0",
     "lodash.find": "^4.6.0",
     "lodash.map": "^4.6.0",
-    "pre-commit": "^1.2.2",
+    "prettier": "^1.15.2",
     "redux": "^3.7.2",
     "redux-mock-store": "^1.3.0",
     "redux-object-to-promise": "^0.3.3",
-    "redux-optimist-promise": "^0.8.3"
+    "redux-optimist-promise": "^0.8.3",
+    "trash-cli": "^1.4.0"
   },
   "dependencies": {
     "invariant": "^2.2.1",

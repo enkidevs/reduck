@@ -1,94 +1,94 @@
-import Duck from '../../../src'
-import { ADD_POST, FETCH_POSTS, UPDATE_POST } from '../redux/actions'
+import Duck from '../../../index';
+import { ADD_POST, FETCH_POSTS, UPDATE_POST } from '../redux/actions';
 
 export const postsInitialState = {
   posts: [],
-  ready: false
-}
+  ready: false,
+};
 
-const duck = new Duck('posts', postsInitialState)
+const duck = new Duck('posts', postsInitialState);
 
 export const postPost = duck.defineAction(ADD_POST, {
-  creator (newPost) {
+  creator(newPost) {
     return {
       payload: {
-        newPost
+        newPost,
       },
       meta: {
         promise: {
           method: 'POST',
           url: '/posts',
-          data: { ...newPost }
+          data: { ...newPost },
         },
-        optimist: true
-      }
-    }
+        optimist: true,
+      },
+    };
   },
-  reducer (state, { payload }) {
+  reducer(state, { payload }) {
     return {
       ...state,
       posts: (state.posts || []).concat(payload.newPost),
-      ready: true
-    }
-  }
-})
+      ready: true,
+    };
+  },
+});
 
 export const updatePost = duck.defineAction(UPDATE_POST, {
-  creator (updatedPost) {
+  creator(updatedPost) {
     return {
       payload: { updatedPost },
       meta: {
         promise: {
           method: 'PUT',
           url: '/posts/fail',
-          data: { ...updatedPost }
+          data: { ...updatedPost },
         },
-        optimist: true
-      }
-    }
+        optimist: true,
+      },
+    };
   },
-  reducer (state, { payload }) {
+  reducer(state, { payload }) {
     return {
       ...state,
       posts: (state.posts || []).map(post => {
-        if (post.id === payload.updatedPost.id) return payload.updatedPost
-        else return post
+        if (post.id === payload.updatedPost.id) return payload.updatedPost;
+        return post;
       }),
-      ready: true
-    }
-  }
-})
+      ready: true,
+    };
+  },
+});
 
 export const fetchPosts = duck.defineAction(FETCH_POSTS, {
-  creator () {
+  creator() {
     return {
       meta: {
         promise: {
           method: 'GET',
-          url: '/posts/fail'
-        }
-      }
-    }
+          url: '/posts/fail',
+        },
+      },
+    };
   },
-  reducer (state) {
+  reducer(state) {
     return {
       ...state,
-      ready: false
-    }
+      ready: false,
+    };
   },
-  resolve (state, { payload }) {
+  resolve(state, { payload }) {
     return {
       ...state,
       posts: payload.data,
-      ready: true
-    }
+      ready: true,
+    };
   },
-  reject (state) {
+  reject(state) {
     return {
       ...state,
-      ready: true
-    }
-  }
-})
+      ready: true,
+    };
+  },
+});
 
-export default duck.reducer
+export default duck.reducer;
